@@ -1,12 +1,12 @@
 import React, { Component }  from 'react'
 import {createStackNavigator} from 'react-navigation'
-import MainContainer from './container/mainContainer'
-import ChatroomPage from './component/chatroomPage'
+import MainContainer from './container/main'
+import ChatroomContainer from './container/chatroom'
 
 
 const RootStack = createStackNavigator({
   Home: MainContainer,
-  Chatroom: ChatroomPage,
+  Chatroom: ChatroomContainer,
 },{
   initialRouteName:'Home'
 }

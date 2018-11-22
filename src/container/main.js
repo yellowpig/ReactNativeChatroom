@@ -9,19 +9,45 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, ListView, Image } from 'react-native';
 import CoverageCell from '../component/coverageCell';
+import { getMetaData } from '../api/index';
+import io from '../util/socket.io/socket.io'
 
+var _this = null;
+_this = {
+  data: {
+    myId: 0,
+    myName: "",
+    myUserName: "",
+    myself: {},
+    users: [],
+    groups: [],
+    userMap: {},
+    groupMap: {},
+    groupIds: "",
+    socket: null,
+    url: ""
+  }
+}
+
+// @TODO 用的模拟数据。fetch数据需要先登陆
+// result:元数据
+var result = getMetaData('/profile/getMetaData')
+_this.data.myId = result.data.myId;
+_this.data.myName = result.data.myName;
+_this.data.myUserName = result.data.myUserName;
+_this.data.myself = result.data.userMap[result.data.myId];
+_this.data.users = result.data.users;
+_this.data.groups = result.data.groups;
+_this.data.userMap = result.data.userMap;
+_this.data.groupMap = result.data.groupMap;
+_this.data.groupIds = result.data.groupIds;
+_this.data.url = result.data.url;
+
+// CoverageArrs:处理后传入组件的数据
 var CoverageArrs = [{
-  title: 'Friends', persons: [
-    { name: 'sumory.wu', id: '201' },
-    { name: 'felix', id: '202' },
-    { name: 'mary', id: '204' },
-  ]
+  title: 'Friends', persons: _this.data.users,chatType:'user'
 }, {
-  title: 'Groups', persons: [
-    { name: 'IM讨论小组', id: '160' },
-    { name: 'Gru使用讨论', id: '180' },
-    { name: '测试群组', id: '190' },
-  ]
+  title: 'Groups', persons: _this.data.groups,chatType:'group'
 }]
 
 export default class MainContainer extends Component {
@@ -39,14 +65,13 @@ export default class MainContainer extends Component {
   }
 
   renderMover(data) {
-    const { title, persons } = data;
+    const { title, persons,chatType } = data;
     return (
-      <CoverageCell title={title} cars={persons} detail={this.detail.bind(this)} navigation={this.props.navigation} />
+      <CoverageCell title={title} cars={persons} chatType={chatType} detail={this.detail.bind(this)} navigation={this.props.navigation} />
     )
   }
 
   render() {
-
 
     return (
       <View style={styles.container}>

@@ -23,32 +23,33 @@ export default class CoverageCell extends Component {
         cars: []
     }
 
-    isShowText() {
-        //for是ES5语法，而且此方法无法获得每一行的索引
-        //故改用map
-        const { title, cars } = this.props
-        var allChild = []
-        for (var i = 0; i < cars.length; i++) {
-            allChild.push(
-                <TouchableOpacity onPress={() =>
-                    this.props.navigation.navigate('Chatroom', {
-                        name: i,
-                    })
-                }>
-                    <View style={styles.chatItem}>
-                        <View style={{ height: 20, width: 20, backgroundColor: 'red' }}></View>
-                        <View style={{ marginHorizontal: 10 }}>
-                            <Text style={{ fontSize: 20, color: 'rgb(143,163,174)' }}>{cars[i].name}</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            )
-        }
-        return allChild
-    }
+    /** for是ES5语法，而且此方法无法获得每一行的索引
+     * 故改用map */
+
+    // isShowText() {
+    //     const { title, cars } = this.props
+    //     var allChild = []
+    //     for (var i = 0; i < cars.length; i++) {
+    //         allChild.push(
+    //             <TouchableOpacity onPress={() =>
+    //                 this.props.navigation.navigate('Chatroom', {
+    //                     name: i,
+    //                 })
+    //             }>
+    //                 <View style={styles.chatItem}>
+    //                     <View style={{ height: 20, width: 20, backgroundColor: 'red' }}></View>
+    //                     <View style={{ marginHorizontal: 10 }}>
+    //                         <Text style={{ fontSize: 20, color: 'rgb(143,163,174)' }}>{cars[i].name}</Text>
+    //                     </View>
+    //                 </View>
+    //             </TouchableOpacity>
+    //         )
+    //     }
+    //     return allChild
+    // }
 
     render() {
-        const { title, cars } = this.props
+        const { title, cars,chatType } = this.props
         return (
             <View style={{ flex: 1 }}>
                 <TouchableOpacity onPress={() => { this.detail(title) }}>
@@ -68,10 +69,13 @@ export default class CoverageCell extends Component {
                 {/* {this.state.isShow ? <View>{this.isShowText()}</View> : <View></View>} */}
                 {this.state.isShow ? <View>{
                     cars.map((car, index) =>
-                        <TouchableOpacity key={index} onPress={() =>
+                        <TouchableOpacity key={index} onPress={() =>{
                             this.props.navigation.navigate('Chatroom', {
-                                name: cars[index].name,
+                                chatType: chatType,
+                                chatWithId: cars[index].id,
+                                showName: cars[index].name,
                             })
+                        }
                         }>
                             <View style={styles.chatItem}>
                                 <View style={{ height: 20, width: 20}}>

@@ -3,16 +3,20 @@ import { StyleSheet, View, Text, TextInput } from 'react-native';
 
 export default class ChatroomPage extends Component {
     static navigationOptions = ({ navigation }) => ({
-        title: navigation.getParam('name', 'unknown'), //聊天对象名
+        title: navigation.getParam('showName', 'unknown'), //聊天对象名
     });
 
     render() {
+        var chatType=this.props.navigation.getParam('chatType', 'unknown')
+        var chatWithId=this.props.navigation.getParam('chatWithId', 0)
+        var showName=this.props.navigation.getParam('showName', 'unknown')
+
         return (
             <View style={styles.container}>
                 <View style={{position:'absolute',top:10,left:10,width:150}}>
                     <Text style={{color:'rgb(128,128,128)',fontSize:13,fontWeight:'normal'}}>11-16 17:30 PM</Text>
                     <View style={{marginTop:5,height:40,borderRadius:5,backgroundColor:'white',paddingLeft:10}}>
-                        <Text style={{lineHeight:40}}>Hello World!</Text>
+                        <Text style={{lineHeight:40}}>Hello World!{chatType}</Text>
                     </View>
                 </View>
                 <View style={styles.footer}>
