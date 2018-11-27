@@ -3,7 +3,8 @@ const BASE_URL = 'http://10.112.249.109:60000'
 export function getMetaData(url) {
     return {
         "data": {
-            "url": "http://39.104.189.84:30200",
+            "url": "http://39.104.189.84:30200",    // 实验室服务器
+            //"url": "http://10.112.246.98:31001", // LXH电脑IP
             "myId": 204,
             "myName": "mary",
             "myUserName": "mary",

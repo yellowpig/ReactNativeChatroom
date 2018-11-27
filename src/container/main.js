@@ -9,10 +9,16 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, ListView, Image } from 'react-native';
 import CoverageCell from '../component/coverageCell';
-import { getMetaData } from '../api/index';
-import io from '../util/socket.io/socket.io'
+import { getMetaData, genToken } from '../api/index';
+import './setUserAgent.js'
+import io from '../util/socket.io/socket.io';
+//socket-clientv2.1.1不能用，报server error，原因待解决
+//import io from 'socket.io-client'
 
 var _this = null;
+var token1 = '';
+var token2 = '';
+
 _this = {
   data: {
     myId: 0,
@@ -29,25 +35,38 @@ _this = {
   }
 }
 
-// @TODO 用的模拟数据。fetch数据需要先登陆
-// result:元数据
-var result = getMetaData('/profile/getMetaData')
-_this.data.myId = result.data.myId;
-_this.data.myName = result.data.myName;
-_this.data.myUserName = result.data.myUserName;
-_this.data.myself = result.data.userMap[result.data.myId];
-_this.data.users = result.data.users;
-_this.data.groups = result.data.groups;
-_this.data.userMap = result.data.userMap;
-_this.data.groupMap = result.data.groupMap;
-_this.data.groupIds = result.data.groupIds;
-_this.data.url = result.data.url;
+init()
+
+function init() {
+  // @TODO 用的模拟数据。fetch数据需要先登陆
+  // result:元数据
+  var result = getMetaData('/profile/getMetaData')
+  _this.data.myId = result.data.myId;
+  _this.data.myName = result.data.myName;
+  _this.data.myUserName = result.data.myUserName;
+  _this.data.myself = result.data.userMap[result.data.myId];
+  _this.data.users = result.data.users;
+  _this.data.groups = result.data.groups;
+  _this.data.userMap = result.data.userMap;
+  _this.data.groupMap = result.data.groupMap;
+  _this.data.groupIds = result.data.groupIds;
+  _this.data.url = result.data.url;
+
+  initConnect(result.data.url)
+}
+
+function initConnect(url) {
+  console.log('Connect to ' + url)
+  var result = genToken('/profile/genToken')
+  token1 = result.token1
+  token2 = result.token2
+}
 
 // CoverageArrs:处理后传入组件的数据
 var CoverageArrs = [{
-  title: 'Friends', persons: _this.data.users,chatType:'user'
+  title: 'Friends', persons: _this.data.users, chatType: 'user'
 }, {
-  title: 'Groups', persons: _this.data.groups,chatType:'group'
+  title: 'Groups', persons: _this.data.groups, chatType: 'group'
 }]
 
 export default class MainContainer extends Component {
@@ -60,15 +79,63 @@ export default class MainContainer extends Component {
     this.state = {
       dataSource: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }).cloneWithRows(CoverageArrs),
     };
+    this.socket = io.connect(_this.data.url, {
+      "reconnect": true,
+      "auto connect": true,
+      "force new connection": true
+    })
+    this.initSocket = this.initSocket.bind(this)
   }
+
+  componentDidMount() {
+    console.log('component did mount');
+    this.initSocket()
+  }
+
+  // 各种socket.on方法
+  initSocket() {
+    var vm = this
+    this.socket.on("connect_error", function (error) {
+      console.error(error);
+    });
+    this.socket.on('disconnect', function () {
+      console.log('disconnect')
+    });
+    // 初次连接时发送auth信息
+    this.socket.on('connect', function () {
+      console.log('connect ok.')
+      var testString = JSON.stringify({
+        id: _this.data.myId,
+        name: _this.data.myName,
+        token1: token1,
+        token2: token2
+      })
+      setTimeout(() => {
+        console.log('send auth')
+        vm.socket.emit('auth', testString)
+      }, 2000);
+    });
+    this.socket.on('auth_result', function (data) {
+      console.log('Auth ok.');
+      setTimeout(() => {
+        if (_this.data.groups.length > 0) {
+          vm.socket.emit('subscribe', JSON.stringify({
+            userId: _this.data.myId,
+            subscribeGroups: _this.data.groups
+          }));
+        }
+      }, 2000);
+    });
+  }
+
   detail(title) {
   }
 
   renderMover(data) {
-    const { title, persons,chatType } = data;
+    const { title, persons, chatType } = data;
     return (
-      <CoverageCell title={title} cars={persons} chatType={chatType} detail={this.detail.bind(this)} navigation={this.props.navigation} />
-    )
+       <CoverageCell title={title} cars={persons} chatType={chatType} detail={this.detail.bind(this)} navigation={this.props.navigation} />
+      )
   }
 
   render() {
