@@ -8,12 +8,15 @@
 
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, ListView, Image } from 'react-native';
-import CoverageCell from '../component/coverageCell';
+import CoverageCell from '../components/coverageCell';
 import { getMetaData, genToken } from '../api/index';
 import './setUserAgent.js'
-import io from '../util/socket.io/socket.io';
+import io from '../utils/socket.io/socket.io';
+import CountEmitter from '../event/countEmitter'
+
 //socket-clientv2.1.1不能用，报server error，原因待解决
 //import io from 'socket.io-client'
+
 
 var _this = null;
 var token1 = '';
@@ -84,12 +87,27 @@ export default class MainContainer extends Component {
       "auto connect": true,
       "force new connection": true
     })
-    this.initSocket = this.initSocket.bind(this)
+    this.initSocket = this.initSocket.bind(this) //便于在函数中使用constructor的this
   }
 
   componentDidMount() {
     console.log('component did mount');
     this.initSocket()
+  }
+
+  componentWillMount() {
+    CountEmitter.addListener('notifyConversationListRefresh', () => {
+      console.log('重新加载会话')
+      this.loadConversations(this.state.username)
+    })
+  }
+
+  loadConversations(username) {
+    // ConversationUtil.getConversations(username, (result) => {
+    //     let count = result.length
+    //     //@TODO 传递给state，用flatlist组件渲染
+    //     //this.setState({recentConversation:result})
+    // })
   }
 
   // 各种socket.on方法
@@ -134,8 +152,8 @@ export default class MainContainer extends Component {
   renderMover(data) {
     const { title, persons, chatType } = data;
     return (
-       <CoverageCell title={title} cars={persons} chatType={chatType} detail={this.detail.bind(this)} navigation={this.props.navigation} />
-      )
+      <CoverageCell title={title} cars={persons} chatType={chatType} myProfile={_this.data.myself} detail={this.detail.bind(this)} navigation={this.props.navigation} />
+    )
   }
 
   render() {

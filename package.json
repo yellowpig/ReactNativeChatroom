@@ -7,10 +7,14 @@
     "test": "jest"
   },
   "dependencies": {
+    "@remobile/react-native-toast": "^1.0.7",
+    "events": "^3.0.0",
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.4",
     "react-native-vector-icons": "^6.0.2",
     "react-navigation": "^2.18.2",
+    "react-redux": "^5.1.1",
+    "redux": "^4.0.1",
     "socket.io-client": "^2.1.1"
   },
   "devDependencies": {

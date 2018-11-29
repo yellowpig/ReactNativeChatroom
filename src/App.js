@@ -1,7 +1,7 @@
 import React, { Component }  from 'react'
 import {createStackNavigator} from 'react-navigation'
-import MainContainer from './container/main'
-import ChatroomContainer from './container/chatroom'
+import MainContainer from './containers/main'
+import ChatroomContainer from './containers/chatroom'
 
 
 const RootStack = createStackNavigator({
