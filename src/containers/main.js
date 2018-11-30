@@ -11,8 +11,11 @@ import { StyleSheet, View, Text, ListView, Image } from 'react-native';
 import CoverageCell from '../components/coverageCell';
 import { getMetaData, genToken } from '../api/index';
 import './setUserAgent.js'
-import io from '../utils/socket.io/socket.io';
+//import io from '../utils/socket.io/socket.io';
 import CountEmitter from '../event/countEmitter'
+import { chatActions } from '../actions/index'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 //socket-clientv2.1.1不能用，报server error，原因待解决
 //import io from 'socket.io-client'
@@ -72,7 +75,7 @@ var CoverageArrs = [{
   title: 'Groups', persons: _this.data.groups, chatType: 'group'
 }]
 
-export default class MainContainer extends Component {
+class MainContainer extends Component {
   static navigationOptions = {
     header: null
   }
@@ -82,17 +85,18 @@ export default class MainContainer extends Component {
     this.state = {
       dataSource: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }).cloneWithRows(CoverageArrs),
     };
-    this.socket = io.connect(_this.data.url, {
-      "reconnect": true,
-      "auto connect": true,
-      "force new connection": true
-    })
     this.initSocket = this.initSocket.bind(this) //便于在函数中使用constructor的this
   }
 
   componentDidMount() {
-    console.log('component did mount');
-    this.initSocket()
+    const { actions } = this.props
+    var authString = JSON.stringify({
+      id: _this.data.myId,
+      name: _this.data.myName,
+      token1: token1,
+      token2: token2
+    })
+    actions.connectChat(authString)
   }
 
   componentWillMount() {
@@ -110,7 +114,7 @@ export default class MainContainer extends Component {
     // })
   }
 
-  // 各种socket.on方法
+  // 函数已弃用。各种socket.on方法
   initSocket() {
     var vm = this
     this.socket.on("connect_error", function (error) {
@@ -119,7 +123,6 @@ export default class MainContainer extends Component {
     this.socket.on('disconnect', function () {
       console.log('disconnect')
     });
-    // 初次连接时发送auth信息
     this.socket.on('connect', function () {
       console.log('connect ok.')
       var testString = JSON.stringify({
@@ -133,6 +136,8 @@ export default class MainContainer extends Component {
         vm.socket.emit('auth', testString)
       }, 2000);
     });
+
+    //@TODO 待迁移
     this.socket.on('auth_result', function (data) {
       console.log('Auth ok.');
       setTimeout(() => {
@@ -157,7 +162,6 @@ export default class MainContainer extends Component {
   }
 
   render() {
-
     return (
       <View style={styles.container}>
         <View style={styles.profile}>
@@ -191,7 +195,21 @@ export default class MainContainer extends Component {
   }
 }
 
-var styles = StyleSheet.create({
+function mapStateToProps(state) {
+  return {
+    chat: state.chat
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators({ ...chatActions }, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainContainer)
+
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'rgb(36,45,49)',

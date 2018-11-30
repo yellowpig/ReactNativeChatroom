@@ -1,5 +1,6 @@
 # ReactNativeChatroom
-RN实现的聊天室，具有单聊、多聊、语音、视频功能   
+React Native+Redux+socket.io+React Navigation
+实现的聊天室，具有单聊、多聊、语音、视频功能   
 本项目为https://github.com/sumory/gru 项目的APP复现版   
 
 ## 关于socket

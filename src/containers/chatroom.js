@@ -4,8 +4,11 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from 'r
 // import InputField from '../components/inputField'
 import CountEmitter from '../event/countEmitter';
 import TimeUtils from '../utils/TimeUtil'
+import { chatActions } from '../actions/index'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-export default class ChatroomPage extends Component {
+class ChatroomPage extends Component {
     static navigationOptions = ({ navigation }) => ({
         title: navigation.getParam('showName', 'unknown'),
     });
@@ -62,8 +65,8 @@ export default class ChatroomPage extends Component {
             content: this.state.inputMsg
         };
 
-        //@TODO 通过Redux管理socket
-        // _this.data.socket.emit('msg', JSON.stringify(msg));
+        //通过Redux管理socket
+        this.props.actions.sendMessage(JSON.stringify(msg))
 
         this.concatMessage({
             createTime: TimeUtils.currentTime(),
@@ -120,6 +123,21 @@ export default class ChatroomPage extends Component {
     }
 
 };
+
+function mapStateToProps(state) {
+    return {
+      chat: state.chat
+    }
+  }
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+      actions: bindActionCreators({ ...chatActions }, dispatch)
+    }
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(ChatroomPage)
+  
 
 const styles = StyleSheet.create({
     container: {
