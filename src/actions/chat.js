@@ -25,10 +25,14 @@ export function connectChat(authString) {
         socket.on('connect', function () {
             console.log('connect ok.')
             setTimeout(() => {
-                console.log('send auth')
+                console.log('auth ok.')
                 socket.emit('auth', authString)
               }, 2000);
         });
+        socket.on('msg',function(msg){
+            console.log(msg)
+            dispatch(receiveMsg(msg))
+        })
     }
 }
 
@@ -36,6 +40,12 @@ export function sendMessage(msg){
     return dispatch=>{
         console.log('socket-msg:'+msg)
         socket.emit('msg',msg)
+    }
+}
+
+export function concatMessageWhenSend(msg){
+    return dispatch=>{
+        dispatch(receiveMsg(msg))
     }
 }
 

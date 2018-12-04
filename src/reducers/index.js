@@ -10,6 +10,6 @@ function chatReducer(state = [], action) {
 
 export default function reducers(state={},action){
     return{
-        chat:chatReducer(state.chat,action)
+        messages:chatReducer(state.messages,action),
     };
 }
