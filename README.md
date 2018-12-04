@@ -8,5 +8,7 @@ React Native+Redux+socket.io+React Navigation
 此版本socket在移动端时会报错，需要手动设置window.navigator.userAgent   
 
 ## 页面
-![首页](https://github.com/yellowpig/ReactNativeChatroom/blob/master/screenshot/main.png)
-![聊天页面](https://github.com/yellowpig/ReactNativeChatroom/blob/master/screenshot/chatroom.png)
+<div align="center">
+<img src="https://github.com/yellowpig/ReactNativeChatroom/blob/master/screenshot/main.png" width="200">
+<img src="https://github.com/yellowpig/ReactNativeChatroom/blob/master/screenshot/chatroom.png" width="200">
+ </div>
