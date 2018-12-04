@@ -9,6 +9,6 @@ React Native+Redux+socket.io+React Navigation
 
 ## 页面
 <div align="center">
-<img src="https://github.com/yellowpig/ReactNativeChatroom/blob/master/screenshot/main.png" width="200">
-<img src="https://github.com/yellowpig/ReactNativeChatroom/blob/master/screenshot/chatroom.png" width="200">
+<img src="https://github.com/yellowpig/ReactNativeChatroom/blob/master/screenshot/main.png" width="400">
+<img src="https://github.com/yellowpig/ReactNativeChatroom/blob/master/screenshot/chatroom.png" width="400">
  </div>
