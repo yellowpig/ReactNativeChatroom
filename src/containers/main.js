@@ -157,7 +157,7 @@ class MainContainer extends Component {
   renderMover(data) {
     const { title, persons, chatType } = data;
     return (
-      <CoverageCell title={title} cars={persons} chatType={chatType} myProfile={_this.data.myself} detail={this.detail.bind(this)} navigation={this.props.navigation} />
+      <CoverageCell title={title} cars={persons} chatType={chatType} userMap={_this.data.userMap} myProfile={_this.data.myself} detail={this.detail.bind(this)} navigation={this.props.navigation} />
     )
   }
 

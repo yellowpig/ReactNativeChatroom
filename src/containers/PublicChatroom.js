@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native'
-// import Message from '../components/message'
-// import InputField from '../components/inputField'
 import CountEmitter from '../event/countEmitter';
 import TimeUtils from '../utils/TimeUtil'
 import { chatActions } from '../actions/index'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-class ChatroomPage extends Component {
+class PublicChatroomPage extends Component {
     static navigationOptions = ({ navigation }) => ({
         title: navigation.getParam('showName', 'unknown'),
     });
@@ -23,19 +21,26 @@ class ChatroomPage extends Component {
         //路由跳转时携带的参数
         this.myProfile = this.props.navigation.getParam('myProfile', {}) //@param myProfile:个人信息
         this.chatType = this.props.navigation.getParam('chatType', 'unknown') //@param chatType:聊天类型
-        this.chatWithId = this.props.navigation.getParam('chatWithId', 0)  //@param chatWithId:聊天对象Id
-        this.showName = this.props.navigation.getParam('showName', 'unknown') //@param showName:聊天对象名
+        this.chatWithId = this.props.navigation.getParam('chatWithId', 0)  //@param chatWithId:群聊房间Id
+        this.showName = this.props.navigation.getParam('showName', 'unknown') //@param showName:群聊名称
+        this.userMap = this.props.navigation.getParam('userMap', {}) //@param userMap:用户信息映射
     }
 
     render() {
         const { chat } = this.props
-        const chatWithId = this.props.navigation.getParam('chatWithId', 0)  //@param chatWithId:聊天对象Id
+        var chatWithId = this.chatWithId
+        var myId = this.myProfile.id
 
-        //Redux统一管理聊天信息。所以在每个聊天页面都需要整理出当前聊天对象的信息
+        //Redux统一管理聊天信息。所以在每个聊天页面都需要整理出当前聊天群组的信息
         var mychatMessages = []
-        chat.messages.map(function (msg, index) {
-            if (msg.fromId === chatWithId || msg.toUserId === chatWithId) {
-                mychatMessages.push(msg)
+        console.log(chat.messages)
+        chat.messages.map(function (item, index) {
+            if (item.msgType === 1) { //判断是群聊
+                if (item.fromId !== myId) { //@bug 多聊发送信息时，后台会发一条广播。因此加一层判断
+                    if (item.toUserId == chatWithId || (item.target && item.target.id == chatWithId)) { //判断接收&发送的消息属于当前群组
+                        mychatMessages.push(item)
+                    }
+                }
             }
         })
 
@@ -69,7 +74,7 @@ class ChatroomPage extends Component {
     sendMessage(fromUserId, toUserId) {
         //向socket发送数据
         var msg = {
-            type: 0, //1 广播，0 单播给指定target
+            type: 1, //1 广播，0 单播给指定target
             target: {
                 id: toUserId
             },
@@ -79,15 +84,9 @@ class ChatroomPage extends Component {
         //通过Redux管理socket
         this.props.actions.sendMessage(JSON.stringify(msg))
 
-        // this.concatMessage({
-        //     createTime: TimeUtils.currentTime(),
-        //     fromUserId: fromUserId,
-        //     toUserId: toUserId,
-        //     content: this.state.inputMsg
-        // })
-
         this.props.actions.concatMessageWhenSend({
             createTime: TimeUtils.currentTime(),
+            msgType: 1,
             fromUserId: fromUserId,
             toUserId: toUserId,
             content: this.state.inputMsg
@@ -95,20 +94,6 @@ class ChatroomPage extends Component {
 
         // 清空TextInput
         this.setState({ inputMsg: '' })
-    }
-
-    //本函数已弃用。将本条消息添加到会话中
-    concatMessage(message) {
-        //@TODO 将本条消息添加到首页会话列表中
-        // ConversationUtil.addMessage(message, () => {
-        //     //通知首页会话列表页刷新会话
-        //     CountEmitter.emit('notifyConversationListRefresh')
-        // })
-
-        //将本条消息添加到会话中
-        let msgs = this.state.messages
-        msgs.push(message)
-        this.setState({ messages: msgs })
     }
 
     _keyExtractor = (item, index) => '#' + index
@@ -127,7 +112,7 @@ class ChatroomPage extends Component {
     renderReceivedTextMsg(item) {
         return (
             <View style={{ flexDirection: 'column', alignItems: 'flex-start', marginTop: 15, marginLeft: 10 }}>
-                <Text style={listItemStyle.time}>{TimeUtils.formatChatTime(parseInt(item.item.createTime))}</Text>
+                <Text style={listItemStyle.title}>{this.getUserNameById(item.item.fromId)}  {TimeUtils.formatChatTime(parseInt(item.item.createTime))}</Text>
                 <View style={{ marginTop: 5, height: 40, borderRadius: 5, backgroundColor: 'rgb(140,204,223)', paddingHorizontal: 10 }}>
                     <Text style={{ lineHeight: 40 }}>{item.item.content}</Text>
                 </View>
@@ -147,6 +132,12 @@ class ChatroomPage extends Component {
         )
     }
 
+    //根据用户Id获取用户名
+    getUserNameById(id) {
+        var userMap = this.userMap
+        return userMap[id].username
+    }
+
 };
 
 function mapStateToProps(state) {
@@ -161,7 +152,7 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChatroomPage)
+export default connect(mapStateToProps, mapDispatchToProps)(PublicChatroomPage)
 
 
 const styles = StyleSheet.create({
@@ -192,9 +183,9 @@ const styles = StyleSheet.create({
 });
 
 const listItemStyle = StyleSheet.create({
-    time: {
+    title: {
         color: 'rgb(128,128,128)',
         fontSize: 13,
-        fontWeight: 'normal'
+        fontWeight: 'normal',
     }
 });

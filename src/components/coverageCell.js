@@ -49,7 +49,7 @@ export default class CoverageCell extends Component {
     // }
 
     render() {
-        const { title, cars, chatType, myProfile } = this.props
+        const { title, cars, chatType, myProfile, userMap } = this.props
         return (
             <View style={{ flex: 1 }}>
                 <TouchableOpacity onPress={() => { this.detail(title) }}>
@@ -70,12 +70,22 @@ export default class CoverageCell extends Component {
                 {this.state.isShow ? <View>{
                     cars.map((car, index) =>
                         <TouchableOpacity key={index} onPress={() => {
-                            this.props.navigation.navigate('Chatroom', {
-                                chatType: chatType,
-                                chatWithId: cars[index].id,
-                                showName: cars[index].name,
-                                myProfile: myProfile,
-                            })
+                            if (chatType === 'user') {
+                                this.props.navigation.navigate('SingleChatroom', {
+                                    chatType: chatType,
+                                    chatWithId: cars[index].id,
+                                    showName: cars[index].name,
+                                    myProfile: myProfile,
+                                })
+                            } else if (chatType === 'group') {
+                                this.props.navigation.navigate('PublicChatroom', {
+                                    chatType: chatType,
+                                    chatWithId: cars[index].id,
+                                    showName: cars[index].name,
+                                    myProfile: myProfile,
+                                    userMap: userMap
+                                })
+                            }
                         }
                         }>
                             <View style={styles.chatItem}>

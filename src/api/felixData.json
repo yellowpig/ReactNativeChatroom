@@ -1,0 +1,201 @@
+{
+    "url": "http://39.104.189.84:30200",
+    "myId": 202,
+    "myName": "felix",
+    "myUserName": "felix",
+    "groups": [
+        {
+            "id": 160,
+            "name": "IM讨论小组"
+        },
+        {
+            "id": 190,
+            "name": "测试群组"
+        }
+    ],
+    "users": [
+        {
+            "id": 201,
+            "avatar": "avatar1.png",
+            "username": "sumory",
+            "password": "123456",
+            "name": "sumory.wu",
+            "url": "sumory.com",
+            "groups": [
+                160,
+                170,
+                180,
+                190
+            ]
+        },
+        {
+            "id": 203,
+            "avatar": "user3.jpg",
+            "username": "sunny",
+            "password": "123456",
+            "name": "sunny",
+            "url": "baidu.com",
+            "groups": [
+                180,
+                190
+            ]
+        },
+        {
+            "id": 204,
+            "avatar": "user4.jpg",
+            "username": "mary",
+            "password": "123456",
+            "name": "mary",
+            "url": "google.com",
+            "groups": [
+                160,
+                180,
+                190
+            ]
+        },
+        {
+            "id": 205,
+            "avatar": "user5.jpg",
+            "username": "bruce",
+            "password": "123456",
+            "name": "bruce",
+            "url": "shell.com",
+            "groups": [
+                160,
+                170,
+                190
+            ]
+        },
+        {
+            "id": 206,
+            "avatar": "user6.jpg",
+            "username": "bamzi",
+            "password": "123456",
+            "name": "bamzi",
+            "url": "abc.com",
+            "groups": [
+                160,
+                170,
+                180
+            ]
+        },
+        {
+            "id": 207,
+            "avatar": "user7.jpg",
+            "username": "roy",
+            "password": "123456",
+            "name": "roy",
+            "url": "yahoo.com",
+            "groups": [
+                160,
+                170,
+                180,
+                190
+            ]
+        }
+    ],
+    "userMap": {
+        "201": {
+            "id": 201,
+            "avatar": "avatar1.png",
+            "username": "sumory",
+            "password": "123456",
+            "name": "sumory.wu",
+            "url": "sumory.com",
+            "groups": [
+                160,
+                170,
+                180,
+                190
+            ]
+        },
+        "202": {
+            "id": 202,
+            "avatar": "user2.jpg",
+            "username": "felix",
+            "password": "123456",
+            "name": "felix",
+            "url": "felix.com",
+            "groups": [
+                160,
+                190
+            ]
+        },
+        "203": {
+            "id": 203,
+            "avatar": "user3.jpg",
+            "username": "sunny",
+            "password": "123456",
+            "name": "sunny",
+            "url": "baidu.com",
+            "groups": [
+                180,
+                190
+            ]
+        },
+        "204": {
+            "id": 204,
+            "avatar": "user4.jpg",
+            "username": "mary",
+            "password": "123456",
+            "name": "mary",
+            "url": "google.com",
+            "groups": [
+                160,
+                180,
+                190
+            ]
+        },
+        "205": {
+            "id": 205,
+            "avatar": "user5.jpg",
+            "username": "bruce",
+            "password": "123456",
+            "name": "bruce",
+            "url": "shell.com",
+            "groups": [
+                160,
+                170,
+                190
+            ]
+        },
+        "206": {
+            "id": 206,
+            "avatar": "user6.jpg",
+            "username": "bamzi",
+            "password": "123456",
+            "name": "bamzi",
+            "url": "abc.com",
+            "groups": [
+                160,
+                170,
+                180
+            ]
+        },
+        "207": {
+            "id": 207,
+            "avatar": "user7.jpg",
+            "username": "roy",
+            "password": "123456",
+            "name": "roy",
+            "url": "yahoo.com",
+            "groups": [
+                160,
+                170,
+                180,
+                190
+            ]
+        }
+    },
+    "groupMap": {
+        "160": {
+            "id": 160,
+            "name": "IM讨论小组"
+        },
+        "190": {
+            "id": 190,
+            "name": "测试群组"
+        }
+    },
+    "groupIds": "160,190"
+}

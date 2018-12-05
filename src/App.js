@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { createStore, applyMiddleware,combineReducers } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { Provider,connect } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import reducer from '../src/reducers';
 import { createStackNavigator } from 'react-navigation'
 import MainContainer from './containers/main'
-import ChatroomContainer from './containers/chatroom'
+import SingleChatroomContainer from './containers/SingleChatroom'
+import PublicChatroomContainer from './containers/PublicChatroom'
 import {
   reduxifyNavigator,
   createReactNavigationReduxMiddleware,
@@ -13,17 +14,18 @@ import {
 } from 'react-navigation-redux-helpers';
 
 const AppNavigator = createStackNavigator({
-    Home: MainContainer,
-    Chatroom: ChatroomContainer,
+  Home: MainContainer,
+  SingleChatroom: SingleChatroomContainer,
+  PublicChatroom: PublicChatroomContainer
 }, {
-        initialRouteName: 'Home'
-    }
+    initialRouteName: 'Home'
+  }
 );
 
 const navReducer = createNavigationReducer(AppNavigator);
 const appReducer = combineReducers({
   nav: navReducer,
-  chat:reducer
+  chat: reducer
 });
 
 const middleware = createReactNavigationReduxMiddleware(
@@ -38,7 +40,7 @@ const mapStateToProps = (state) => ({
 const AppWithNavigationState = connect(mapStateToProps)(AppNav);
 const store = createStore(
   appReducer,
-  applyMiddleware(middleware,thunkMiddleware),
+  applyMiddleware(middleware, thunkMiddleware),
 );
 
 export default class App extends Component {
